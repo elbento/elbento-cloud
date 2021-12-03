@@ -1,4 +1,6 @@
 SHELL:=/bin/bash
+ARCH=`dpkg --print-architecture`
+RELEASE=`lsb_release -cs`
 include .env
 
 .PHONY: repo install
@@ -8,8 +10,8 @@ repo:
 		sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 
 	echo \
-      "deb [arch=`dpkg --print-architecture` signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-      $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+      "deb [arch=$(ARCH) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+      $(RELEASE) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 install:
-	sudo apt-get install docker-ce docker-ce-cli containerd.io
+	sudo apt-get update && sudo apt-get install docker-ce docker-ce-cli containerd.io
